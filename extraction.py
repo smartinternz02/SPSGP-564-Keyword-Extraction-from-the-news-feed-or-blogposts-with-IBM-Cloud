@@ -14,15 +14,13 @@ def extractor():
 
 @app.route('/keywords', methods=['POST'])
 def keywords():
-    sen = request.form['sentence'].replace(" ", "%20")
-    num = request.form['num']
-    print(sen)
+    sen = request.form['text']
+    num = request.form['wordnum']
     keyword = check(sen, num)
     return render_template('keywords.html', keyword=keyword)
 
 def check(sentence, num):
     url = "https://textanalysis-keyword-extraction-v1.p.rapidapi.com/keyword-extractor-text"
-
     payload = "text=" + sentence + "&wordnum=" + num
     headers = {
         'content-type': "application/x-www-form-urlencoded",
@@ -31,8 +29,7 @@ def check(sentence, num):
         }
 
     response = requests.request("POST", url, data=payload, headers=headers)
-    print(response.text)
-    return response.json()['result']
+    return response.json()['keywords']
 
 if __name__ == "__main__":
     app.run(debug="")
